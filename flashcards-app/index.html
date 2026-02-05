@@ -151,6 +151,41 @@
         </div>
       </footer>
 
+      <!-- Study Mode View (hidden by default) -->
+      <div id="study-mode" class="study-mode hidden">
+        <div class="study-container">
+          <header class="study-header">
+            <h2 id="study-deck-title">Study Mode</h2>
+            <button id="exit-study-btn" class="btn btn-secondary" aria-label="Exit study mode">Exit</button>
+          </header>
+
+          <div class="study-content">
+            <div class="study-progress">
+              <span id="study-card-num">1</span> / <span id="study-card-total">0</span>
+            </div>
+
+            <div class="study-card-wrapper">
+              <article id="study-card" class="study-card">
+                <div class="study-card-inner">
+                  <div class="study-card-front">
+                    <p id="study-card-text">Loading...</p>
+                  </div>
+                  <div class="study-card-back">
+                    <p id="study-card-answer">Loading...</p>
+                  </div>
+                </div>
+              </article>
+              <p class="study-hint">Click card or press <strong>Space</strong> to flip • <strong>← →</strong> to navigate</p>
+            </div>
+
+            <div class="study-controls">
+              <button id="study-prev-btn" class="btn btn-secondary">← Previous</button>
+              <button id="study-next-btn" class="btn btn-secondary">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Accessible Modal (moved near end for easy focus management) -->
       <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-overlay" data-modal-close></div>

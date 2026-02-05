@@ -426,4 +426,145 @@
 		window.appDecks = { decks, addDeck, updateDeck, deleteDeck, addCardToDeck, selectDeck };
 	})();
 
+	// Study Mode Implementation
+	(function() {
+		const studyMode = document.getElementById('study-mode');
+		const studyDeckTitle = document.getElementById('study-deck-title');
+		const studyCard = document.getElementById('study-card');
+		const studyCardText = document.getElementById('study-card-text');
+		const studyCardAnswer = document.getElementById('study-card-answer');
+		const studyCardNum = document.getElementById('study-card-num');
+		const studyCardTotal = document.getElementById('study-card-total');
+		const exitStudyBtn = document.getElementById('exit-study-btn');
+		const prevBtn = document.getElementById('study-prev-btn');
+		const nextBtn = document.getElementById('study-next-btn');
+		const actionButtons = document.querySelector('.action-buttons');
+
+		if (!studyMode || !actionButtons) return;
+
+		let currentDeckId = null;
+		let currentCardIndex = 0;
+		let studyKeyHandler = null;
+
+		function enterStudyMode(deckId) {
+			const deck = window.appDecks.decks.find(d => d.id === Number(deckId));
+			if (!deck || !deck.cards.length) {
+				alert('No cards in this deck to study.');
+				return;
+			}
+
+			currentDeckId = deckId;
+			currentCardIndex = 0;
+
+			// Show study mode, hide main content
+			studyMode.classList.remove('hidden');
+			document.body.style.overflow = 'hidden';
+
+			// Update UI
+			studyDeckTitle.textContent = `Study: ${deck.name}`;
+			studyCardTotal.textContent = deck.cards.length;
+			renderStudyCard();
+
+			// Set up keyboard handler
+			studyKeyHandler = (e) => handleStudyKeypress(e);
+			document.addEventListener('keydown', studyKeyHandler);
+		}
+
+		function exitStudyMode() {
+			studyMode.classList.add('hidden');
+			document.body.style.overflow = '';
+			currentDeckId = null;
+			currentCardIndex = 0;
+
+			// Clean up keyboard handler
+			if (studyKeyHandler) {
+				document.removeEventListener('keydown', studyKeyHandler);
+				studyKeyHandler = null;
+			}
+		}
+
+		function renderStudyCard() {
+			const deck = window.appDecks.decks.find(d => d.id === currentDeckId);
+			if (!deck || !deck.cards[currentCardIndex]) return;
+
+			const card = deck.cards[currentCardIndex];
+			studyCardNum.textContent = currentCardIndex + 1;
+			studyCardText.textContent = card.front;
+			studyCardAnswer.textContent = card.back;
+			studyCard.classList.remove('is-flipped');
+
+			// Update button states
+			prevBtn.disabled = currentCardIndex === 0;
+			nextBtn.disabled = currentCardIndex === deck.cards.length - 1;
+		}
+
+		function goToPreviousCard() {
+			if (currentCardIndex > 0) {
+				currentCardIndex--;
+				renderStudyCard();
+			}
+		}
+
+		function goToNextCard() {
+			const deck = window.appDecks.decks.find(d => d.id === currentDeckId);
+			if (deck && currentCardIndex < deck.cards.length - 1) {
+				currentCardIndex++;
+				renderStudyCard();
+			}
+		}
+
+		function handleStudyKeypress(e) {
+			if (e.key === 'Escape') {
+				e.preventDefault();
+				exitStudyMode();
+			} else if (e.key === ' ') {
+				e.preventDefault();
+				studyCard.classList.toggle('is-flipped');
+			} else if (e.key === 'ArrowLeft') {
+				e.preventDefault();
+				goToPreviousCard();
+			} else if (e.key === 'ArrowRight') {
+				e.preventDefault();
+				goToNextCard();
+			}
+		}
+
+		// Wire Study Deck button
+		actionButtons.addEventListener('click', (e) => {
+			if (e.target.textContent === 'Study Deck') {
+				e.preventDefault();
+				if (window.appDecks) {
+					const selectedDeckId = window.appDecks.decks.find(d => 
+						d.name === document.querySelector('.deck-header h2').textContent
+					)?.id;
+					if (selectedDeckId) enterStudyMode(selectedDeckId);
+				}
+			}
+		});
+
+		// Study mode controls
+		exitStudyBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			exitStudyMode();
+		});
+
+		prevBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			goToPreviousCard();
+		});
+
+		nextBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			goToNextCard();
+		});
+
+		// Click to flip card in study mode
+		studyCard.addEventListener('click', () => {
+			studyCard.classList.toggle('is-flipped');
+		});
+
+		// Expose for debugging
+		window.appStudyMode = { enterStudyMode, exitStudyMode };
+	})();
+
 
