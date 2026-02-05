@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <div class="app-container">
       <!-- Header -->
       <header class="header">
@@ -21,29 +24,29 @@
 
       <div class="main-layout">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" aria-label="Deck navigation">
           <div class="sidebar-header">
             <h2>Decks</h2>
-            <button class="add-deck-btn">+ New</button>
+            <button class="add-deck-btn" aria-label="Create a new deck">+ New</button>
           </div>
-          <ul class="deck-list">
-            <li class="deck-item">
+          <ul class="deck-list" role="list">
+            <li class="deck-item" role="listitem">
               <a href="#" class="deck-link">Biology 101</a>
-              <span class="card-count">15 cards</span>
+              <span class="card-count" aria-label="15 cards in this deck">15 cards</span>
             </li>
-            <li class="deck-item">
+            <li class="deck-item" role="listitem">
               <a href="#" class="deck-link">Spanish Vocab</a>
-              <span class="card-count">24 cards</span>
+              <span class="card-count" aria-label="24 cards in this deck">24 cards</span>
             </li>
-            <li class="deck-item">
+            <li class="deck-item" role="listitem">
               <a href="#" class="deck-link">Math Formulas</a>
-              <span class="card-count">10 cards</span>
+              <span class="card-count" aria-label="10 cards in this deck">10 cards</span>
             </li>
           </ul>
         </aside>
 
         <!-- Main Content Area -->
-        <main class="main-content">
+        <main class="main-content" id="main-content">
           <section class="deck-section">
             <div class="deck-header">
               <h2>Biology 101</h2>
@@ -51,19 +54,21 @@
             </div>
 
             <!-- Search Bar -->
-            <div class="search-bar">
+            <div class="search-bar" role="search" aria-label="Card search">
               <input
                 id="search-input"
                 type="text"
                 class="search-input"
                 placeholder="Search cards by front or back..."
-                aria-label="Search cards"
+                aria-label="Search cards in this deck"
               />
-              <span id="search-count" class="search-count"></span>
+              <span id="search-count" class="search-count" aria-live="polite" aria-atomic="true"></span>
             </div>
 
             <!-- Cards Grid -->
-            <div class="cards-container">
+            <div class="cards-container" role="region" aria-label="Flashcards" aria-live="polite">
+              <!-- Cards rendered here -->
+            </div>
               <article class="card">
                 <div class="card-inner">
                   <div class="card-front">
@@ -144,10 +149,10 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="action-buttons">
-              <button class="btn btn-primary">Study Deck</button>
-              <button class="btn btn-secondary">Edit</button>
-              <button class="btn btn-secondary">Delete</button>
+            <div class="action-buttons" role="toolbar" aria-label="Deck actions">
+              <button class="btn btn-primary" aria-label="Start study mode for this deck">Study Deck</button>
+              <button class="btn btn-secondary" aria-label="Edit deck details">Edit</button>
+              <button class="btn btn-secondary" aria-label="Delete this deck">Delete</button>
             </div>
           </section>
         </main>
@@ -164,35 +169,35 @@
       </footer>
 
       <!-- Study Mode View (hidden by default) -->
-      <div id="study-mode" class="study-mode hidden">
+      <div id="study-mode" class="study-mode hidden" role="application" aria-label="Study mode">
         <div class="study-container">
           <header class="study-header">
             <h2 id="study-deck-title">Study Mode</h2>
-            <button id="exit-study-btn" class="btn btn-secondary" aria-label="Exit study mode">Exit</button>
+            <button id="exit-study-btn" class="btn btn-secondary" aria-label="Exit study mode and return to deck view">Exit</button>
           </header>
 
           <div class="study-content">
-            <div class="study-progress">
+            <div class="study-progress" aria-live="polite" aria-atomic="true">
               <span id="study-card-num">1</span> / <span id="study-card-total">0</span>
             </div>
 
             <div class="study-card-wrapper">
-              <article id="study-card" class="study-card">
+              <article id="study-card" class="study-card" role="img" aria-label="Flashcard">
                 <div class="study-card-inner">
-                  <div class="study-card-front">
+                  <div class="study-card-front" aria-label="Front of card">
                     <p id="study-card-text">Loading...</p>
                   </div>
-                  <div class="study-card-back">
+                  <div class="study-card-back" aria-label="Back of card">
                     <p id="study-card-answer">Loading...</p>
                   </div>
                 </div>
               </article>
-              <p class="study-hint">Click card or press <strong>Space</strong> to flip • <strong>← →</strong> to navigate</p>
+              <p class="study-hint" id="study-instructions">Click card or press <strong>Space</strong> to flip • <strong>← →</strong> to navigate • <strong>Esc</strong> to exit</p>
             </div>
 
-            <div class="study-controls">
-              <button id="study-prev-btn" class="btn btn-secondary">← Previous</button>
-              <button id="study-next-btn" class="btn btn-secondary">Next →</button>
+            <div class="study-controls" role="toolbar" aria-label="Study navigation">
+              <button id="study-prev-btn" class="btn btn-secondary" aria-label="Go to previous card">← Previous</button>
+              <button id="study-next-btn" class="btn btn-secondary" aria-label="Go to next card">Next →</button>
             </div>
           </div>
         </div>

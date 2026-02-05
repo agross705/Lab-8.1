@@ -1,4 +1,66 @@
-// Accessible Modal Component
+	// Accessibility Utilities
+	(function() {
+		/**
+		 * Create an accessible empty state element
+		 * @param {string} icon - Emoji or icon character
+		 * @param {string} title - Main title text
+		 * @param {string} description - Descriptive text
+		 * @param {HTMLElement|null} action - Optional action button/element
+		 * @returns {HTMLElement} Empty state container
+		 */
+		function createEmptyState(icon, title, description, action = null) {
+			const container = document.createElement('div');
+			container.className = 'empty-state';
+			container.setAttribute('role', 'status');
+
+			const iconEl = document.createElement('div');
+			iconEl.className = 'empty-state-icon';
+			iconEl.setAttribute('aria-hidden', 'true');
+			iconEl.textContent = icon;
+
+			const titleEl = document.createElement('h3');
+			titleEl.className = 'empty-state-title';
+			titleEl.textContent = title;
+
+			const descEl = document.createElement('p');
+			descEl.className = 'empty-state-description';
+			descEl.textContent = description;
+
+			container.appendChild(iconEl);
+			container.appendChild(titleEl);
+			container.appendChild(descEl);
+
+			if (action) {
+				const actionWrapper = document.createElement('div');
+				actionWrapper.className = 'empty-state-action';
+				actionWrapper.appendChild(action);
+				container.appendChild(actionWrapper);
+			}
+
+			return container;
+		}
+
+		/**
+		 * Announce a message to screen readers
+		 * @param {string} message - Message to announce
+		 * @param {string} priority - 'polite' or 'assertive'
+		 */
+		function announceToScreenReader(message, priority = 'polite') {
+			const announcement = document.createElement('div');
+			announcement.setAttribute('role', 'status');
+			announcement.setAttribute('aria-live', priority);
+			announcement.setAttribute('aria-atomic', 'true');
+			announcement.style.position = 'absolute';
+			announcement.style.left = '-10000px';
+			announcement.textContent = message;
+			document.body.appendChild(announcement);
+			setTimeout(() => announcement.remove(), 1000);
+		}
+
+		window.a11y = { createEmptyState, announceToScreenReader };
+	})();
+
+	// Accessible Modal Component
 (() => {
 	const openBtn = document.getElementById('open-modal-btn');
 	const modal = document.getElementById('modal');
@@ -236,10 +298,13 @@
 		function renderCards(deck) {
 			cardsContainer.replaceChildren();
 			if (!deck || !deck.cards.length) {
-				const emptyMsg = document.createElement('p');
-				emptyMsg.className = 'text-muted';
-				emptyMsg.textContent = 'No cards in this deck yet.';
-				cardsContainer.appendChild(emptyMsg);
+				const emptyEl = window.a11y.createEmptyState(
+					'📝',
+					'No flashcards yet',
+					'Double-click the deck name or use the Edit button to add cards to this deck.',
+					null
+				);
+				cardsContainer.appendChild(emptyEl);
 				return;
 			}
 			deck.cards.forEach((card, idx) => {
@@ -270,11 +335,13 @@
 				const editBtn = document.createElement('button');
 				editBtn.className = 'card-action-btn';
 				editBtn.dataset.action = 'edit-card';
+				editBtn.setAttribute('aria-label', `Edit card: ${card.front}`);
 				editBtn.textContent = 'Edit';
 
 				const deleteBtn = document.createElement('button');
 				deleteBtn.className = 'card-action-btn';
 				deleteBtn.dataset.action = 'delete-card';
+				deleteBtn.setAttribute('aria-label', `Delete card: ${card.front}`);
 				deleteBtn.textContent = 'Delete';
 
 				overlay.appendChild(editBtn);
@@ -468,10 +535,13 @@
 		function renderAllCards(deck) {
 			cardsContainer.replaceChildren();
 			if (!deck || !deck.cards.length) {
-				const emptyMsg = document.createElement('p');
-				emptyMsg.className = 'text-muted';
-				emptyMsg.textContent = 'No cards in this deck yet.';
-				cardsContainer.appendChild(emptyMsg);
+				const emptyEl = window.a11y.createEmptyState(
+					'📝',
+					'No flashcards yet',
+					'Double-click the deck name or use the Edit button to add cards to this deck.',
+					null
+				);
+				cardsContainer.appendChild(emptyEl);
 				return;
 			}
 			deck.cards.forEach((card, idx) => createCardElement(card, idx, deck.id));
@@ -483,10 +553,14 @@
 		function renderFilteredCards(deck, matchedCards) {
 			cardsContainer.replaceChildren();
 			if (!matchedCards.length) {
-				const emptyMsg = document.createElement('p');
-				emptyMsg.className = 'text-muted';
-				emptyMsg.textContent = 'No cards match your search.';
-				cardsContainer.appendChild(emptyMsg);
+				const emptyEl = window.a11y.createEmptyState(
+					'🔍',
+					'No cards match',
+					`Try searching with different keywords.`,
+					null
+				);
+				cardsContainer.appendChild(emptyEl);
+				window.a11y.announceToScreenReader(`No cards match your search in "${deck.name}"`);
 				return;
 			}
 			matchedCards.forEach((card, idx) => {
@@ -494,6 +568,7 @@
 				const originalIdx = deck.cards.indexOf(card);
 				createCardElement(card, originalIdx, deck.id);
 			});
+			window.a11y.announceToScreenReader(`Found ${matchedCards.length} card${matchedCards.length !== 1 ? 's' : ''}`);
 		}
 
 		/**
@@ -504,6 +579,7 @@
 			article.className = 'card';
 			article.dataset.cardIndex = idx;
 			article.dataset.deckId = deckId;
+			article.setAttribute('aria-label', `Card ${idx + 1}: ${card.front}`);
 
 			const inner = document.createElement('div');
 			inner.className = 'card-inner';
@@ -526,11 +602,13 @@
 			const editBtn = document.createElement('button');
 			editBtn.className = 'card-action-btn';
 			editBtn.dataset.action = 'edit-card';
+			editBtn.setAttribute('aria-label', `Edit card: ${card.front}`);
 			editBtn.textContent = 'Edit';
 
 			const deleteBtn = document.createElement('button');
 			deleteBtn.className = 'card-action-btn';
 			deleteBtn.dataset.action = 'delete-card';
+			deleteBtn.setAttribute('aria-label', `Delete card: ${card.front}`);
 			deleteBtn.textContent = 'Delete';
 
 			overlay.appendChild(editBtn);
