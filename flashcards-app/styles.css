@@ -1,5 +1,5 @@
 /* ===========================
-   CSS Variables & Root Styles
+   CSS Variables & Root Styles (Light Mode)
    =========================== */
 :root {
     /* Color Palette */
@@ -11,7 +11,7 @@
     --color-danger: #ef4444;
     --color-warning: #f59e0b;
 
-    /* Neutral Colors */
+    /* Neutral Colors - Light Mode */
     --color-bg-primary: #ffffff;
     --color-bg-secondary: #f9fafb;
     --color-bg-tertiary: #f3f4f6;
@@ -20,6 +20,10 @@
     --color-text-tertiary: #9ca3af;
     --color-border: #e5e7eb;
     --color-border-light: #f3f4f6;
+
+    /* Focus Colors */
+    --color-focus-ring: #3b82f6;
+    --color-focus-ring-offset: #ffffff;
 
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -75,6 +79,42 @@
     --breakpoint-md: 768px;
     --breakpoint-lg: 1024px;
     --breakpoint-xl: 1280px;
+}
+
+/* ===========================
+   Dark Mode Variables
+   =========================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Color Palette - Dark Mode */
+        --color-primary: #60a5fa;
+        --color-primary-dark: #3b82f6;
+        --color-primary-light: #1e3a8a;
+        --color-secondary: #34d399;
+        --color-secondary-dark: #10b981;
+        --color-danger: #f87171;
+        --color-warning: #fbbf24;
+
+        /* Neutral Colors - Dark Mode */
+        --color-bg-primary: #111827;
+        --color-bg-secondary: #1f2937;
+        --color-bg-tertiary: #374151;
+        --color-text-primary: #f3f4f6;
+        --color-text-secondary: #d1d5db;
+        --color-text-tertiary: #9ca3af;
+        --color-border: #4b5563;
+        --color-border-light: #374151;
+
+        /* Focus Colors - Dark Mode */
+        --color-focus-ring: #60a5fa;
+        --color-focus-ring-offset: #111827;
+
+        /* Shadows - Dark Mode */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+    }
 }
 
 /* ===========================
@@ -147,11 +187,43 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Focus Styles - Links */
+a:focus {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+a:focus:not(:focus-visible) {
+    outline: none;
+}
+
+a:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
 button {
     font-family: inherit;
     cursor: pointer;
     border: none;
     background: none;
+}
+
+/* Focus Styles - Buttons */
+button:focus {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+button:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
 }
 
 /* ===========================
@@ -203,14 +275,37 @@ button {
     color: var(--color-primary);
 }
 
+.nav-btn:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    background-color: var(--color-bg-secondary);
+}
+
 /* ===========================
    Main Layout (Header + Sidebar + Content)
+   Responsive Grid Layout
    =========================== */
 .main-layout {
     display: grid;
     grid-template-columns: var(--sidebar-width) 1fr;
     flex: 1;
     gap: 0;
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+/* Tablet: Sidebar collapses or becomes narrower */
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 250px 1fr;
+    }
+}
+
+/* Mobile: Sidebar becomes stacked or hidden */
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
 }
 
 /* ===========================
@@ -251,6 +346,12 @@ button {
     box-shadow: var(--shadow-md);
 }
 
+.add-deck-btn:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    box-shadow: var(--shadow-md);
+}
+
 .deck-list {
     list-style: none;
 }
@@ -280,6 +381,13 @@ button {
 
 .deck-link:hover {
     color: var(--color-primary);
+}
+
+.deck-link:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+    padding: 2px;
 }
 
 .card-count {
@@ -433,6 +541,12 @@ button {
     transform: translateY(-2px);
 }
 
+.btn-primary:focus-visible {
+    outline: 3px solid var(--color-focus-ring-offset);
+    outline-offset: 2px;
+    box-shadow: var(--shadow-lg), 0 0 0 4px var(--color-focus-ring);
+}
+
 .btn-secondary {
     background-color: var(--color-bg-secondary);
     color: var(--color-text-primary);
@@ -442,6 +556,12 @@ button {
 .btn-secondary:hover {
     background-color: var(--color-bg-tertiary);
     border-color: var(--color-text-secondary);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
     box-shadow: var(--shadow-md);
 }
 
@@ -480,6 +600,13 @@ button {
 
 .footer-links a:hover {
     color: var(--color-primary-dark);
+}
+
+.footer-links a:focus-visible {
+    outline: 3px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+    padding: 2px 4px;
 }
 
 /* ===========================
