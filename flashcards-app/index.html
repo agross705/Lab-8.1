@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flashcards App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <header class="header">
+        <h1>Flashcards App</h1>
+        <nav class="nav">
+          <button class="nav-btn">Home</button>
+          <button class="nav-btn">About</button>
+          <button class="nav-btn">Help</button>
+        </nav>
+      </header>
+
+      <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <h2>Decks</h2>
+            <button class="add-deck-btn">+ New</button>
+          </div>
+          <ul class="deck-list">
+            <li class="deck-item">
+              <a href="#" class="deck-link">Biology 101</a>
+              <span class="card-count">15 cards</span>
+            </li>
+            <li class="deck-item">
+              <a href="#" class="deck-link">Spanish Vocab</a>
+              <span class="card-count">24 cards</span>
+            </li>
+            <li class="deck-item">
+              <a href="#" class="deck-link">Math Formulas</a>
+              <span class="card-count">10 cards</span>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+          <section class="deck-section">
+            <div class="deck-header">
+              <h2>Biology 101</h2>
+              <p class="deck-stats">15 cards • Last studied: 2 days ago</p>
+            </div>
+
+            <!-- Cards Grid -->
+            <div class="cards-container">
+              <article class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <p>What is photosynthesis?</p>
+                  </div>
+                  <div class="card-back">
+                    <p>
+                      Process by which plants convert light into chemical
+                      energy.
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <p>What is mitochondria?</p>
+                  </div>
+                  <div class="card-back">
+                    <p>The powerhouse of the cell; produces ATP for energy.</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <p>What is DNA?</p>
+                  </div>
+                  <div class="card-back">
+                    <p>
+                      Deoxyribonucleic acid; carries genetic instructions for
+                      life.
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <p>What is osmosis?</p>
+                  </div>
+                  <div class="card-back">
+                    <p>Movement of water across a semipermeable membrane.</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <p>Define metabolism.</p>
+                  </div>
+                  <div class="card-back">
+                    <p>
+                      Chemical processes that maintain life and convert
+                      nutrients to energy.
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <p>What is homeostasis?</p>
+                  </div>
+                  <div class="card-back">
+                    <p>
+                      Maintenance of stable internal conditions in living
+                      organisms.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button class="btn btn-primary">Study Deck</button>
+              <button class="btn btn-secondary">Edit</button>
+              <button class="btn btn-secondary">Delete</button>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>&copy; 2025 Flashcards App. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
