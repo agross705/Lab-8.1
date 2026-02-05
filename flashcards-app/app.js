@@ -127,9 +127,39 @@
 		let selectedDeckId = null;
 
 		const decks = [
-			{ id: 1, name: 'Biology 101', cards: [], createdAt: Date.now(), updatedAt: Date.now() },
-			{ id: 2, name: 'Spanish Vocab', cards: [], createdAt: Date.now(), updatedAt: Date.now() },
-			{ id: 3, name: 'Math Formulas', cards: [], createdAt: Date.now(), updatedAt: Date.now() }
+			{ 
+				id: 1, 
+				name: 'Biology 101', 
+				cards: [
+					{ front: 'What is photosynthesis?', back: 'Process by which plants convert light into chemical energy.' },
+					{ front: 'What is mitochondria?', back: 'The powerhouse of the cell; produces ATP for energy.' },
+					{ front: 'What is DNA?', back: 'Deoxyribonucleic acid; carries genetic instructions for life.' }
+				], 
+				createdAt: Date.now(), 
+				updatedAt: Date.now() 
+			},
+			{ 
+				id: 2, 
+				name: 'Spanish Vocab', 
+				cards: [
+					{ front: 'Hello', back: 'Hola' },
+					{ front: 'Thank you', back: 'Gracias' },
+					{ front: 'Goodbye', back: 'Adiós' }
+				], 
+				createdAt: Date.now(), 
+				updatedAt: Date.now() 
+			},
+			{ 
+				id: 3, 
+				name: 'Math Formulas', 
+				cards: [
+					{ front: 'Pythagorean theorem', back: 'a² + b² = c²' },
+					{ front: 'Area of a circle', back: 'πr²' },
+					{ front: 'Quadratic formula', back: 'x = (-b ± √(b² - 4ac)) / 2a' }
+				], 
+				createdAt: Date.now(), 
+				updatedAt: Date.now() 
+			}
 		];
 
 		function renderDeckList() {
