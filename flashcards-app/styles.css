@@ -527,7 +527,7 @@ button:focus-visible {
     gap: var(--spacing-sm);
     padding: var(--spacing-md);
     background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-    opacity: 0;
+    opacity: 1;
     transition: opacity var(--transition-fast);
     justify-content: center;
 }
