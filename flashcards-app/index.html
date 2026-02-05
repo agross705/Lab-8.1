@@ -15,6 +15,7 @@
           <button class="nav-btn">Home</button>
           <button class="nav-btn">About</button>
           <button class="nav-btn">Help</button>
+          <button id="open-modal-btn" class="nav-btn">Open Modal</button>
         </nav>
       </header>
 
@@ -149,6 +150,26 @@
           <a href="#">Contact</a>
         </div>
       </footer>
+
+      <!-- Accessible Modal (moved near end for easy focus management) -->
+      <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-overlay" data-modal-close></div>
+        <div class="modal-panel" role="document">
+          <header class="modal-header">
+            <h3 id="modal-title">Example Modal</h3>
+            <button id="modal-close-btn" class="btn" aria-label="Close dialog">✕</button>
+          </header>
+          <div class="modal-body">
+            <p>This is an accessible modal. Try tabbing around or press <strong>Esc</strong> to close.</p>
+            <label for="modal-input">Sample input</label>
+            <input id="modal-input" type="text" />
+            <div class="mt-md">
+              <button class="btn btn-primary">Primary action</button>
+              <button class="btn btn-secondary">Secondary</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="app.js"></script>
