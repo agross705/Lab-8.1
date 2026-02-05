@@ -133,22 +133,46 @@
 		];
 
 		function renderDeckList() {
-			deckListEl.innerHTML = decks.map(d => {
-				return `
-					<li class="deck-item" data-id="${d.id}">
-						<a href="#" class="deck-link">${escapeHtml(d.name)}</a>
-						<span class="card-count">${d.cards.length} cards</span>
-						<div class="deck-actions" aria-hidden="true">
-							<button class="btn btn-secondary edit-deck" data-action="edit" data-id="${d.id}">Edit</button>
-							<button class="btn btn-secondary delete-deck" data-action="delete" data-id="${d.id}">Delete</button>
-						</div>
-					</li>
-				`;
-			}).join('');
-		}
+			deckListEl.replaceChildren();
+			decks.forEach(d => {
+				const li = document.createElement('li');
+				li.className = 'deck-item';
+				li.dataset.id = d.id;
 
-		function escapeHtml(str) {
-			return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s]));
+				const link = document.createElement('a');
+				link.href = '#';
+				link.className = 'deck-link';
+				link.textContent = d.name;
+
+				const count = document.createElement('span');
+				count.className = 'card-count';
+				count.textContent = `${d.cards.length} cards`;
+
+				const actions = document.createElement('div');
+				actions.className = 'deck-actions';
+				actions.setAttribute('aria-hidden', 'true');
+
+				const editBtn = document.createElement('button');
+				editBtn.className = 'btn btn-secondary edit-deck';
+				editBtn.dataset.action = 'edit';
+				editBtn.dataset.id = d.id;
+				editBtn.textContent = 'Edit';
+
+				const deleteBtn = document.createElement('button');
+				deleteBtn.className = 'btn btn-secondary delete-deck';
+				deleteBtn.dataset.action = 'delete';
+				deleteBtn.dataset.id = d.id;
+				deleteBtn.textContent = 'Delete';
+
+				actions.appendChild(editBtn);
+				actions.appendChild(deleteBtn);
+
+				li.appendChild(link);
+				li.appendChild(count);
+				li.appendChild(actions);
+
+				deckListEl.appendChild(li);
+			});
 		}
 
 		function selectDeck(id) {
@@ -180,20 +204,39 @@
 		}
 
 		function renderCards(deck) {
+			cardsContainer.replaceChildren();
 			if (!deck || !deck.cards.length) {
-				cardsContainer.innerHTML = '<p class="text-muted">No cards in this deck yet.</p>';
+				const emptyMsg = document.createElement('p');
+				emptyMsg.className = 'text-muted';
+				emptyMsg.textContent = 'No cards in this deck yet.';
+				cardsContainer.appendChild(emptyMsg);
 				return;
 			}
-			cardsContainer.innerHTML = deck.cards.map(card => {
-				return `
-					<article class="card">
-						<div class="card-inner">
-							<div class="card-front"><p>${escapeHtml(card.front)}</p></div>
-							<div class="card-back"><p>${escapeHtml(card.back)}</p></div>
-						</div>
-					</article>
-				`;
-			}).join('');
+			deck.cards.forEach(card => {
+				const article = document.createElement('article');
+				article.className = 'card';
+
+				const inner = document.createElement('div');
+				inner.className = 'card-inner';
+
+				const front = document.createElement('div');
+				front.className = 'card-front';
+				const frontP = document.createElement('p');
+				frontP.textContent = card.front;
+				front.appendChild(frontP);
+
+				const back = document.createElement('div');
+				back.className = 'card-back';
+				const backP = document.createElement('p');
+				backP.textContent = card.back;
+				back.appendChild(backP);
+
+				inner.appendChild(front);
+				inner.appendChild(back);
+
+				article.appendChild(inner);
+				cardsContainer.appendChild(article);
+			});
 		}
 
 		function addDeck(name) {
