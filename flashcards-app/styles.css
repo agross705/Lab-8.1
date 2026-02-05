@@ -462,6 +462,7 @@ button:focus-visible {
 .card {
     height: 250px;
     perspective: 1000px;
+    position: relative;
 }
 
 .card-inner {
@@ -473,8 +474,12 @@ button:focus-visible {
     cursor: pointer;
 }
 
-.card:hover .card-inner {
+.card.is-flipped .card-inner {
     transform: rotateY(180deg);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
 }
 
 .card-front,
@@ -511,6 +516,47 @@ button:focus-visible {
     margin: 0;
     font-size: var(--font-size-lg);
     line-height: var(--line-height-normal);
+}
+
+.card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    justify-content: center;
+}
+
+.card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-action-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: white;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.card-action-btn:hover {
+    background: var(--color-bg-tertiary);
+    transform: scale(1.05);
+}
+
+.card-action-btn:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+}
 }
 
 /* ===========================

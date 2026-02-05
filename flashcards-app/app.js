@@ -212,9 +212,11 @@
 				cardsContainer.appendChild(emptyMsg);
 				return;
 			}
-			deck.cards.forEach(card => {
+			deck.cards.forEach((card, idx) => {
 				const article = document.createElement('article');
 				article.className = 'card';
+				article.dataset.cardIndex = idx;
+				article.dataset.deckId = deck.id;
 
 				const inner = document.createElement('div');
 				inner.className = 'card-inner';
@@ -231,10 +233,29 @@
 				backP.textContent = card.back;
 				back.appendChild(backP);
 
+				// Add overlay with action buttons
+				const overlay = document.createElement('div');
+				overlay.className = 'card-overlay';
+
+				const editBtn = document.createElement('button');
+				editBtn.className = 'card-action-btn';
+				editBtn.dataset.action = 'edit-card';
+				editBtn.textContent = 'Edit';
+
+				const deleteBtn = document.createElement('button');
+				deleteBtn.className = 'card-action-btn';
+				deleteBtn.dataset.action = 'delete-card';
+				deleteBtn.textContent = 'Delete';
+
+				overlay.appendChild(editBtn);
+				overlay.appendChild(deleteBtn);
+
 				inner.appendChild(front);
 				inner.appendChild(back);
 
 				article.appendChild(inner);
+				article.appendChild(overlay);
+
 				cardsContainer.appendChild(article);
 			});
 		}
@@ -274,6 +295,25 @@
 			renderDeckList();
 		}
 
+		function editCard(deckId, cardIndex, front, back) {
+			const deck = decks.find(d => d.id === Number(deckId));
+			if (!deck || !deck.cards[cardIndex]) return;
+			deck.cards[cardIndex].front = front;
+			deck.cards[cardIndex].back = back;
+			deck.updatedAt = Date.now();
+			if (selectedDeckId === deck.id) renderCards(deck);
+			renderDeckList();
+		}
+
+		function deleteCard(deckId, cardIndex) {
+			const deck = decks.find(d => d.id === Number(deckId));
+			if (!deck || !deck.cards[cardIndex]) return;
+			deck.cards.splice(cardIndex, 1);
+			deck.updatedAt = Date.now();
+			if (selectedDeckId === deck.id) renderCards(deck);
+			renderDeckList();
+		}
+
 		// Event wiring
 		addDeckBtn.addEventListener('click', (e) => {
 			e.preventDefault();
@@ -307,6 +347,45 @@
 			if (back === null) return;
 			addCardToDeck(selectedDeckId, front, back);
 			selectDeck(selectedDeckId);
+		});
+
+		// Card flip toggle on click
+		cardsContainer.addEventListener('click', (e) => {
+			const card = e.target.closest('.card');
+			if (!card) return;
+			// Don't toggle if clicking action buttons
+			if (e.target.closest('[data-action]')) return;
+			card.classList.toggle('is-flipped');
+		});
+
+		// Delegated card action handlers
+		cardsContainer.addEventListener('click', (e) => {
+			const btn = e.target.closest('[data-action]');
+			if (!btn) return;
+
+			const card = btn.closest('.card');
+			if (!card) return;
+
+			const deckId = card.dataset.deckId;
+			const cardIndex = card.dataset.cardIndex;
+			const action = btn.dataset.action;
+
+			if (action === 'edit-card') {
+				const deck = decks.find(d => d.id === Number(deckId));
+				if (!deck || !deck.cards[cardIndex]) return;
+				const oldCard = deck.cards[cardIndex];
+				const newFront = prompt('Edit card front:', oldCard.front);
+				if (newFront === null) return;
+				const newBack = prompt('Edit card back:', oldCard.back);
+				if (newBack === null) return;
+				editCard(deckId, cardIndex, newFront.trim(), newBack.trim());
+				selectDeck(deckId);
+				card.classList.remove('is-flipped');
+			} else if (action === 'delete-card') {
+				if (confirm('Delete this card?')) {
+					deleteCard(deckId, cardIndex);
+				}
+			}
 		});
 
 		// initial render
