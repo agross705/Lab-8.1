@@ -50,6 +50,18 @@
               <p class="deck-stats">15 cards • Last studied: 2 days ago</p>
             </div>
 
+            <!-- Search Bar -->
+            <div class="search-bar">
+              <input
+                id="search-input"
+                type="text"
+                class="search-input"
+                placeholder="Search cards by front or back..."
+                aria-label="Search cards"
+              />
+              <span id="search-count" class="search-count"></span>
+            </div>
+
             <!-- Cards Grid -->
             <div class="cards-container">
               <article class="card">
@@ -207,6 +219,7 @@
       </div>
     </div>
 
+    <script src="storage.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

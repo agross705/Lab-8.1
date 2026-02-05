@@ -426,7 +426,154 @@
 		window.appDecks = { decks, addDeck, updateDeck, deleteDeck, addCardToDeck, selectDeck };
 	})();
 
-	// Study Mode Implementation
+	// Debounced Search Implementation
+	(function() {
+		const searchInput = document.getElementById('search-input');
+		const searchCount = document.getElementById('search-count');
+		const cardsContainer = document.querySelector('.cards-container');
+
+		if (!searchInput || !searchCount || !cardsContainer) return;
+
+		let searchTimeout = null;
+		let currentDeck = null;
+
+		/**
+		 * Debounced search handler (300ms delay)
+		 */
+		function performSearch(query) {
+			if (!currentDeck) return;
+
+			const trimmed = query.toLowerCase().trim();
+
+			if (!trimmed) {
+				// No search - show all cards
+				renderAllCards(currentDeck);
+				searchCount.textContent = '';
+				return;
+			}
+
+			// Filter cards based on front or back matching
+			const matchedCards = currentDeck.cards.filter(card =>
+				card.front.toLowerCase().includes(trimmed) ||
+				card.back.toLowerCase().includes(trimmed)
+			);
+
+			renderFilteredCards(currentDeck, matchedCards);
+			searchCount.textContent = `${matchedCards.length} of ${currentDeck.cards.length} match`;
+		}
+
+		/**
+		 * Render all cards for the current deck
+		 */
+		function renderAllCards(deck) {
+			cardsContainer.replaceChildren();
+			if (!deck || !deck.cards.length) {
+				const emptyMsg = document.createElement('p');
+				emptyMsg.className = 'text-muted';
+				emptyMsg.textContent = 'No cards in this deck yet.';
+				cardsContainer.appendChild(emptyMsg);
+				return;
+			}
+			deck.cards.forEach((card, idx) => createCardElement(card, idx, deck.id));
+		}
+
+		/**
+		 * Render only matched cards
+		 */
+		function renderFilteredCards(deck, matchedCards) {
+			cardsContainer.replaceChildren();
+			if (!matchedCards.length) {
+				const emptyMsg = document.createElement('p');
+				emptyMsg.className = 'text-muted';
+				emptyMsg.textContent = 'No cards match your search.';
+				cardsContainer.appendChild(emptyMsg);
+				return;
+			}
+			matchedCards.forEach((card, idx) => {
+				// Find original index to preserve card operations
+				const originalIdx = deck.cards.indexOf(card);
+				createCardElement(card, originalIdx, deck.id);
+			});
+		}
+
+		/**
+		 * Create and append a card element
+		 */
+		function createCardElement(card, idx, deckId) {
+			const article = document.createElement('article');
+			article.className = 'card';
+			article.dataset.cardIndex = idx;
+			article.dataset.deckId = deckId;
+
+			const inner = document.createElement('div');
+			inner.className = 'card-inner';
+
+			const front = document.createElement('div');
+			front.className = 'card-front';
+			const frontP = document.createElement('p');
+			frontP.textContent = card.front;
+			front.appendChild(frontP);
+
+			const back = document.createElement('div');
+			back.className = 'card-back';
+			const backP = document.createElement('p');
+			backP.textContent = card.back;
+			back.appendChild(backP);
+
+			const overlay = document.createElement('div');
+			overlay.className = 'card-overlay';
+
+			const editBtn = document.createElement('button');
+			editBtn.className = 'card-action-btn';
+			editBtn.dataset.action = 'edit-card';
+			editBtn.textContent = 'Edit';
+
+			const deleteBtn = document.createElement('button');
+			deleteBtn.className = 'card-action-btn';
+			deleteBtn.dataset.action = 'delete-card';
+			deleteBtn.textContent = 'Delete';
+
+			overlay.appendChild(editBtn);
+			overlay.appendChild(deleteBtn);
+
+			inner.appendChild(front);
+			inner.appendChild(back);
+
+			article.appendChild(inner);
+			article.appendChild(overlay);
+
+			cardsContainer.appendChild(article);
+		}
+
+		// Search input handler with debounce
+		searchInput.addEventListener('input', (e) => {
+			clearTimeout(searchTimeout);
+			const query = e.target.value;
+			searchTimeout = setTimeout(() => {
+				performSearch(query);
+			}, 300);
+		});
+
+		// Update search when deck changes
+		const originalSelectDeck = window.appDecks.selectDeck;
+		window.appDecks.selectDeck = function(id) {
+			originalSelectDeck.call(this, id);
+			currentDeck = window.appDecks.decks.find(d => d.id === Number(id));
+			searchInput.value = '';
+			searchCount.textContent = '';
+		};
+
+		// Update on card add/edit/delete
+		const originalRenderCards = window.appDecks.renderCards;
+		if (originalRenderCards) {
+			window.appDecks.renderCards = function(deck) {
+				currentDeck = deck;
+				searchInput.value = '';
+				searchCount.textContent = '';
+				renderAllCards(deck);
+			};
+		}
+	})();
 	(function() {
 		const studyMode = document.getElementById('study-mode');
 		const studyDeckTitle = document.getElementById('study-deck-title');
