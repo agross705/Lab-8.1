@@ -98,7 +98,7 @@ The expectation is not to build a fully functional app. You should explore the c
 - Used additional code that is never used
 - Missing accessibility names
 - Changes need to be very clear and detailed for results
-- I despise using AI with the furry of a thousand suns!!!
+- I despise using AI with the fury of a thousand suns!!!
 
 ### Continued development
 
